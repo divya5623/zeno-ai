@@ -2,18 +2,18 @@
 node_modules/
 backend/venv/
 backend/.venv/
-frontend/node_modules/
+frontend/
+__pycache__/
+*.py[cod]
 
-# Build output and generated files
+# Database & local storage
+*.db
+*.sqlite3
+
+# Build output
 dist/
 build/
 coverage/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.next/
-out/
 
 # Local environment files and secrets
 .env
@@ -29,23 +29,27 @@ out/
 credentials.json
 service-account*.json
 
-# Local editor and operating-system files
+# OS and Editor
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
 
-# SkillBridge AI and other legacy/unrelated local directories
-backend/
-frontend/
-sih/
+# Temporary and backup files
+*.bak
+*.log
+_temp_*
+scratch/
+
+# Legacy PPT / slides / scratch files
+*.pptx
+*.pdf
 exact_pdf_preview/
 final_pdf_preview/
 ppt_assets/
 ref_pages/
 slides_preview/
-*.pptx
-*.pdf
+sih/
 PROGRESS.md
 abyss_cinematic_player.html
 presentation*.html
@@ -56,5 +60,11 @@ inspect_app.py
 capture_screenshots.py
 test_helper.py
 ref_extracted_info.txt
-*.png
-*.jpg
+dragon_*.jpg
+ref_slide_*.png
+zuno-logo-clean.png
+
+# Keep essential logo assets
+!zuno-logo.png
+!zuno-logo-dark.png
+!public/

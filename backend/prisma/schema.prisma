@@ -1,0 +1,188 @@
+// Prisma Schema for Solvely AI Study Platform
+// Production-ready PostgreSQL schema with pgvector support for RAG
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector")]
+}
+
+generator client {
+  provider        = "prisma-client-py"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+enum UserTier {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum StudySetType {
+  FLASHCARDS
+  QUIZ
+  STUDY_GUIDE
+  EXAM_PREDICTOR
+}
+
+enum LiveSessionStatus {
+  RECORDING
+  PROCESSING
+  COMPLETED
+  ARCHIVED
+}
+
+model User {
+  id              String             @id @default(uuid())
+  email           String             @unique
+  name            String?
+  hashedPassword  String
+  tier            UserTier           @default(FREE)
+  quotaRemaining  Int                @default(50)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  studySets       StudySet[]
+  whiteboards     CanvasWhiteboard[]
+  liveSessions    LiveNoteSession[]
+  documents       Document[]
+
+  @@map("users")
+}
+
+model StudySet {
+  id          String       @id @default(uuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  topic       String
+  type        StudySetType
+  payload     Json         // Contains flashcard cards, quiz questions, or study guide markdown
+  isPublic    Boolean      @default(false)
+  viewCount   Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@map("study_sets")
+}
+
+model CanvasWhiteboard {
+  id          String         @id @default(uuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String         @default("Untitled Lesson")
+  zoomLevel   Float          @default(1.0)
+  panX        Float          @default(0.0)
+  panY        Float          @default(0.0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  nodes       CanvasNode[]
+  edges       CanvasEdge[]
+
+  @@index([userId])
+  @@map("canvas_whiteboards")
+}
+
+model CanvasNode {
+  id           String           @id @default(uuid())
+  whiteboardId String
+  whiteboard   CanvasWhiteboard @relation(fields: [whiteboardId], references: [id], onDelete: Cascade)
+  nodeType     String           // "STEP", "FORMULA", "GRAPH", "DIAGRAM", "CALLOUT", "SUMMARY"
+  title        String
+  content      String           // Markdown or LaTeX body
+  posX         Float            @default(0)
+  posY         Float            @default(0)
+  width        Float            @default(320)
+  height       Float            @default(200)
+  colorTheme   String           @default("emerald")
+  parameters   Json?            // Interactive sliders, graph formulas, e.g. {"a": 3, "b": 4}
+  orderIndex   Int              @default(0)
+  createdAt    DateTime         @default(now())
+
+  @@index([whiteboardId])
+  @@map("canvas_nodes")
+}
+
+model CanvasEdge {
+  id           String           @id @default(uuid())
+  whiteboardId String
+  whiteboard   CanvasWhiteboard @relation(fields: [whiteboardId], references: [id], onDelete: Cascade)
+  sourceNodeId String
+  targetNodeId String
+  label        String?
+  style        String           @default("curved") // "curved", "straight", "dashed"
+
+  @@index([whiteboardId])
+  @@map("canvas_edges")
+}
+
+model Document {
+  id          String          @id @default(uuid())
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  filename    String
+  fileType    String          // "pdf", "docx", "txt"
+  fileSize    Int
+  storagePath String
+  pageCount   Int             @default(1)
+  processed   Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+
+  chunks      DocumentChunk[]
+
+  @@index([userId])
+  @@map("documents")
+}
+
+model DocumentChunk {
+  id          String                 @id @default(uuid())
+  documentId  String
+  document    Document               @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  chunkIndex  Int
+  pageNumber  Int?
+  textContent String                 @db.Text
+  tokenCount  Int                    @default(0)
+  // Supported in Postgres with pgvector:
+  embedding   Unsupported("vector(1536)")?
+
+  @@index([documentId])
+  @@map("document_chunks")
+}
+
+model LiveNoteSession {
+  id              String             @id @default(uuid())
+  userId          String
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String             @default("Live Lecture Notes")
+  status          LiveSessionStatus  @default(RECORDING)
+  durationSeconds Int                @default(0)
+  rawTranscript   String             @default("") @db.Text
+  formattedNotes  String             @default("") @db.Text
+  keyConcepts     Json?              // Extracted tags & definitions
+  diagramSvg      String?            @db.Text
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  transcriptChunks TranscriptChunk[]
+
+  @@index([userId])
+  @@map("live_note_sessions")
+}
+
+model TranscriptChunk {
+  id          String          @id @default(uuid())
+  sessionId   String
+  session     LiveNoteSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  timestampMs Int
+  speaker     String          @default("Lecturer")
+  text        String          @db.Text
+  confidence  Float           @default(0.95)
+  isFinal     Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+
+  @@index([sessionId])
+  @@map("transcript_chunks")
+}

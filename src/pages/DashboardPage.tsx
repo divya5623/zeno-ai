@@ -69,6 +69,70 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
+      {/* PAYGUARD HACKATHON SHOWCASE: Ten-Finger Profile & Drag-To-Center Authentication */}
+      <div
+        style={{
+          background: 'linear-gradient(135deg, #00457C 0%, #0079C1 100%)',
+          borderRadius: '16px',
+          padding: '1.5rem',
+          color: '#FFFFFF',
+          boxShadow: '0 8px 24px rgba(0, 69, 124, 0.25)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem'
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', backgroundColor: 'rgba(255,255,255,0.15)', padding: '0.2rem 0.6rem', borderRadius: '999px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.04em' }}>
+              <span>🚀</span> PAYPAL AI HACKATHON FEATURE HIGHLIGHT
+            </div>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, margin: '0.4rem 0 0.2rem' }}>
+              Ten-Finger Profile & Drag-to-Center Payment Auth
+            </h2>
+            <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.9, maxWidth: '640px', lineHeight: 1.5 }}>
+              Enter your 6-digit demo PIN by dragging digits into the central target. Features automatic multi-stage AI risk analysis, behavioral anomaly telemetry, persistent 10-finger enrollment, and PayPal Sandbox settlement.
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <Link
+              to="/payguard-auth"
+              style={{
+                backgroundColor: '#FFFFFF',
+                color: '#00457C',
+                padding: '0.65rem 1.25rem',
+                borderRadius: '8px',
+                fontWeight: 800,
+                fontSize: '0.88rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+              }}
+            >
+              🖐️ Drag & Pay Demo
+            </Link>
+            <Link
+              to="/enrollment"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.18)',
+                color: '#FFFFFF',
+                border: '1px solid rgba(255,255,255,0.3)',
+                padding: '0.65rem 1rem',
+                borderRadius: '8px',
+                fontWeight: 700,
+                fontSize: '0.88rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem'
+              }}
+            >
+              🔐 10-Finger Setup
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* CORE FINANCIAL BOUNDARY: Account Balance vs AI Authorized Budget */}
       <div
         style={{

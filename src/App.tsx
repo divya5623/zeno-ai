@@ -9,6 +9,9 @@ import { TransactionsPage } from './pages/TransactionsPage';
 import { SecurityCenterPage } from './pages/SecurityCenterPage';
 import { AttackLabPage } from './pages/AttackLabPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { PayGuardAuthPage } from './pages/PayGuardAuthPage';
+import { PayGuardEnrollmentPage } from './pages/PayGuardEnrollmentPage';
+import { PayGuardProfilePage } from './pages/PayGuardProfilePage';
 
 export const App: React.FC = () => {
   return (
@@ -17,6 +20,9 @@ export const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<DashboardPage />} />
+            <Route path="payguard-auth" element={<PayGuardAuthPage />} />
+            <Route path="enrollment" element={<PayGuardEnrollmentPage />} />
+            <Route path="profile" element={<PayGuardProfilePage />} />
             <Route path="shop" element={<ShopPage />} />
             <Route path="authorizations" element={<AuthorizationsPage />} />
             <Route path="transactions" element={<TransactionsPage />} />

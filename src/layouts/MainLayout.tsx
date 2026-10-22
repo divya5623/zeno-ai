@@ -11,6 +11,9 @@ export const MainLayout: React.FC = () => {
 
   const navItems = [
     { path: '/', label: 'Dashboard', icon: '📊' },
+    { path: '/payguard-auth', label: 'Drag & Pay Auth', icon: '🖐️' },
+    { path: '/enrollment', label: '10-Finger Setup', icon: '🔐' },
+    { path: '/profile', label: 'Security Profile', icon: '👤' },
     { path: '/shop', label: 'Shop with AI', icon: '🛍️' },
     { path: '/authorizations', label: 'Authorizations', icon: '🛡️' },
     { path: '/transactions', label: 'Transactions', icon: '💳' },
